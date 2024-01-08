@@ -1,0 +1,75 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste avec Prix</title>
+    <h4>In the "Event" tab, you define the day you will organize the event, and in the "Basket" tab, you choose what you want to order.<hr /> and here you have the list of everything yyou can order</h4>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        h4{
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        .list-item {
+            list-style: none;
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .prix {
+            color: #28a745;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>List</h1>
+        <ul>
+            <li class="list-item">Table 1.5m <span class="prix">5€</span></li>
+            <li class="list-item">Chair <span class="prix">3€</span></li>
+            <li class="list-item">Gold-plated plates with golden border 27cm <span class="prix">0.35€/st</span></li>
+            <li class="list-item">Medium gold-plated plates with golden border 20cm <span class="prix">0.25€/st</span></li>
+            <li class="list-item">Cup and saucer with golden border 20cm <span class="prix">0.30€/st</span></li>
+            <li class="list-item">Gold-plated silverware </br>- Fork</br>- Spoon</br>- Knife </br>- Teaspoon <span class="prix">0.35€/st
+               </span>
+            </li>
+        </ul>
+    </div>
+
+</body>
+</html>

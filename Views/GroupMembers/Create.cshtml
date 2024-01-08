@@ -1,0 +1,60 @@
+﻿@model GroupSpace23.Models.GroupMember
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>GroupMember</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="GroupId" class="control-label"></label>
+                <select asp-for="GroupId" class ="form-control" asp-items="ViewBag.GroupId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="MemberId" class="control-label"></label>
+                <select asp-for="MemberId" class ="form-control" asp-items="ViewBag.MemberId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="AddedById" class="control-label"></label>
+                <select asp-for="AddedById" class ="form-control" asp-items="ViewBag.AddedById"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Added" class="control-label"></label>
+                <input asp-for="Added" class="form-control" />
+                <span asp-validation-for="Added" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Removed" class="control-label"></label>
+                <input asp-for="Removed" class="form-control" />
+                <span asp-validation-for="Removed" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RemovedById" class="control-label"></label>
+                <input asp-for="RemovedById" class="form-control" />
+                <span asp-validation-for="RemovedById" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsHost" /> @Html.DisplayNameFor(model => model.IsHost)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

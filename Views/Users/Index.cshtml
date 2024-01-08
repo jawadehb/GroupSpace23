@@ -1,0 +1,88 @@
+﻿@model IEnumerable<GroupSpace23.Models.UserIndexViewModel>
+@{
+    ViewData["Title"] = "Index";
+    string kommastring = "";
+    string vertikaalStreepje = " | ";
+}
+
+<h1>Gebruikers</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Gebruiker
+            </th>
+            <th>
+                Voornaam
+            </th>
+            <th>
+                Achternaam
+            </th>
+            <th>
+                E-mail
+            </th>
+            <th>
+                Rollen
+            </th>
+            <th></th>
+        </tr>
+        <tr>
+            <form asp-action="Index" asp-controller="Users" method="get">
+                <th>
+                    <input type="text" name="userName" class="form-control" value=@ViewData["userName"] onchange="$(this.form).submit();"/>
+                </th>
+                <th>
+                <input type="text" name="firstName" class="form-control" value=@ViewData["firstName"] onchange="$(this.form).submit();"/>
+                </th>
+                <th>
+                <input type="text" name="lastName" class="form-control" value=@ViewData["lastName"] onchange="$(this.form).submit();"/>
+                </th>
+                <th>
+                <input type="text" name="email" class="form-control" value=@ViewData["email"] onchange="$(this.form).submit()"/>
+                </th>
+                <th> </th>
+                <th></th>
+            </form>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+               @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+               @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @{kommastring = "";}
+                @foreach (string role in item.Roles)
+                {
+                        @kommastring @role
+                        {
+                            kommastring = ", ";
+                        }
+                }
+            </td>
+            <td>
+                @if (item.Blocked)
+                {
+                        <a asp-action="UnBlock" asp-route-userName="@item.UserName">Deblokkeren</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Block" asp-route-userName="@item.UserName">Blokkeren</a> @vertikaalStreepje
+                        <a asp-action="Roles" asp-route-userName="@item.UserName">Rollen</a>
+                    }
+            </td>
+         </tr>
+}
+    </tbody>
+</table>

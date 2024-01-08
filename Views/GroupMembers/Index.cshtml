@@ -1,0 +1,71 @@
+﻿@model IEnumerable<GroupSpace23.Models.GroupMember>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Group)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Member)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AddedBy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Added)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Removed)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RemovedById)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsHost)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Group.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Member.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AddedBy.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Added)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Removed)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RemovedById)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsHost)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

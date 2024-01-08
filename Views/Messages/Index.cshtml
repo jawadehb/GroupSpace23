@@ -1,0 +1,68 @@
+﻿@model MessageIndexViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Nieuwe boodschap</a>
+</p>
+
+<p>
+    you need to 
+</p>
+
+
+<form asp-controller="Messages" asp-action="Index" method="get" >
+    <h4>
+        <select type="submit" asp-for="SelectMode" asp-items="Model.Modes" onchange="this.form.submit()">
+        </select>
+    </h4>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayName("Name of the event")
+            </th>
+            <th>
+                @Html.DisplayName("What do you need ?")
+            </th>
+         
+            <th>
+                @Html.DisplayName("Verzender")
+            </th>
+            <th>
+                @Html.DisplayName("Description of the event")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Messages) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Body)
+            </td>
+            
+            <td>
+                @Html.DisplayFor(modelItem => item.Sender.UserName)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.Recipient.Name)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Wijzigen</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Tonen</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Verwijderen</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
