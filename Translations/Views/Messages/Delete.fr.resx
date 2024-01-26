@@ -117,16 +117,40 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Groep aangemaakt" xml:space="preserve">
-    <value>Groep aangemaakt</value>
+  <data name="Ben je zeker dat je dit wilt verwijderen?" xml:space="preserve">
+    <value>Etes vous sur de vouloir supprimer ?</value>
   </data>
-  <data name="Groep gestopt" xml:space="preserve">
-    <value>Groep gestopt</value>
+  <data name="Bestelling" xml:space="preserve">
+    <value>Commande</value>
   </data>
-  <data name="Naam" xml:space="preserve">
-    <value>Naam</value>
+  <data name="Event" xml:space="preserve">
+    <value>Événement</value>
   </data>
-  <data name="Omschrijving" xml:space="preserve">
-    <value>Omschrijving</value>
+  <data name="Extra informatie" xml:space="preserve">
+    <value>Information Supplementaire</value>
+  </data>
+  <data name="Formule Klassieke Eleganti" xml:space="preserve">
+    <value>Formule Élégance Classique</value>
+  </data>
+  <data name="Formule Moderne Glamour" xml:space="preserve">
+    <value>Formule Glamour Moderne</value>
+  </data>
+  <data name="Formule Printemps Pastel" xml:space="preserve">
+    <value>Formule Pastel de Printemps</value>
+  </data>
+  <data name="Formule Rustieke Chique" xml:space="preserve">
+    <value>Formule Rustique Chic</value>
+  </data>
+  <data name="Formule Thématique Vintage" xml:space="preserve">
+    <value>Formule Thématique Vintage</value>
+  </data>
+  <data name="Terug naar overzicht" xml:space="preserve">
+    <value>Retour à l'aperçu</value>
+  </data>
+  <data name="Verwijderen" xml:space="preserve">
+    <value>Effacer</value>
+  </data>
+  <data name="Wat heb je nodig" xml:space="preserve">
+    <value>De quoi a tu besoin</value>
   </data>
 </root>

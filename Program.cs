@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using GroupSpace2022.Services;
 using NETCore.MailKit.Infrastructure.Internal;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.OpenApi.Models;
 
 namespace GroupSpace23
 {
@@ -48,6 +49,15 @@ namespace GroupSpace23
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            // Add services for RESTFull API
+            builder.Services.AddControllers();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1",
+                                new OpenApiInfo { Title = "GroupSpace2023", Version = "v1" });
+            });
+
+
             builder.Services.Configure<IdentityOptions>(options =>
             {
                 // Password settings.
@@ -78,6 +88,12 @@ namespace GroupSpace23
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+            else // Gebruik van RESTFull API tijdens ontwikkeling
+            {
+                app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "GroupSpace2023 v1"));
+            }
             app.UseStaticFiles();
 
             app.UseRouting();
@@ -92,7 +108,7 @@ namespace GroupSpace23
                 await MyDbContext.DataInitializer(context, userManager);
             }
 
-            var supportedCultures = new[] {"en-US", "fr", "nl" };
+            var supportedCultures = new[] {"en", "fr", "nl" };
             var localizationOptions = new RequestLocalizationOptions().SetDefaultCulture(supportedCultures[0])
                 .AddSupportedCultures(supportedCultures)
                 .AddSupportedUICultures(supportedCultures);
@@ -102,6 +118,8 @@ namespace GroupSpace23
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
             app.MapRazorPages();
+
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
             app.Run();
         }

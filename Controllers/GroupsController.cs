@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,6 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using GroupSpace23.Data;
 using GroupSpace23.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using GroupSpace23.Areas.Identity.Data;
 
 namespace GroupSpace23.Controllers
 {
@@ -15,20 +20,49 @@ namespace GroupSpace23.Controllers
     public class GroupsController : Controller
     {
         private readonly MyDbContext _context;
+        private readonly UserManager<GroupSpace23User> _userManager;
 
-        public GroupsController(MyDbContext context)
+        public GroupsController(MyDbContext context, UserManager<GroupSpace23User> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
-        [AllowAnonymous]
+
         // GET: Groups
-        public async Task<IActionResult> Index()
+        [AllowAnonymous]
+        public async Task<IActionResult> Index(DateTime? filterDate)
         {
-            return _context.Groups != null ?
-                        View(await _context.Groups.Where(g => g.Ended > DateTime.Now).ToListAsync()) :
-                        Problem("Entity set 'GroupSpace23Context.Group'  is null.");
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            IQueryable<Group> groupsQuery;
+
+            if (User.IsInRole("SystemAdministrator"))
+            {
+                // Als de gebruiker een SystemAdministrator is, toon alle groepen
+                groupsQuery = _context.Groups.Where(g => g.Ended > DateTime.Now);
+            }
+            else
+            {
+                // Als de gebruiker geen SystemAdministrator is, toon alleen de groepen die ze hebben gemaakt
+                groupsQuery = _context.Groups.Where(g => g.StartedById == currentUser.Id && g.Ended > DateTime.Now);
+            }
+
+            if (filterDate.HasValue)
+            {
+                groupsQuery = groupsQuery.Where(g => g.Started.Date == filterDate.Value.Date);
+            }
+
+            List<Group> groups = await groupsQuery.ToListAsync();
+
+            ViewBag.FilterDate = filterDate.HasValue ? filterDate.Value.ToString("yyyy-MM-dd") : null;
+
+            return View(groups);
         }
+
+
+
+
 
         // GET: Groups/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -55,8 +89,6 @@ namespace GroupSpace23.Controllers
         }
 
         // POST: Groups/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description,Started,Ended,StartedById")] Group @group)
@@ -84,12 +116,18 @@ namespace GroupSpace23.Controllers
             {
                 return NotFound();
             }
+
+            // Check if the current user is the creator of the group or an admin
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser.Id != @group.StartedById && !User.IsInRole("SystemAdministrator"))
+            {
+                return Forbid();
+            }
+
             return View(@group);
         }
 
         // POST: Groups/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Started,Ended,StartedById")] Group @group)
@@ -97,6 +135,13 @@ namespace GroupSpace23.Controllers
             if (id != @group.Id)
             {
                 return NotFound();
+            }
+
+            // Check if the current user is the creator of the group or an admin
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser.Id != @group.StartedById && !User.IsInRole("SystemAdministrator"))
+            {
+                return Forbid();
             }
 
             if (ModelState.IsValid)
@@ -122,6 +167,7 @@ namespace GroupSpace23.Controllers
             return View(@group);
         }
 
+
         // GET: Groups/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -137,6 +183,13 @@ namespace GroupSpace23.Controllers
                 return NotFound();
             }
 
+            // Check if the current user is the creator of the group or an admin
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser.Id != @group.StartedById && !User.IsInRole("SystemAdministrator"))
+            {
+                return Forbid();
+            }
+
             return View(@group);
         }
 
@@ -147,16 +200,27 @@ namespace GroupSpace23.Controllers
         {
             if (_context.Groups == null)
             {
-                return Problem("Entity set 'GroupSpace23Context.Group'  is null.");
-            }
-            var @group = await _context.Groups.FindAsync(id);
-            if (@group != null)
-            {
-                group.Ended = DateTime.Now;
-                _context.Groups.Update(@group);
+                return Problem("Entity set 'GroupSpace23Context.Group' is null.");
             }
 
+            var group = await _context.Groups.FindAsync(id);
+
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            // Check if the current user is the creator of the group or an admin
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser.Id != group.StartedById && !User.IsInRole("SystemAdministrator"))
+            {
+                return Forbid();
+            }
+
+            group.Ended = DateTime.Now;
+            _context.Groups.Update(group);
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -166,3 +230,4 @@ namespace GroupSpace23.Controllers
         }
     }
 }
+

@@ -8,52 +8,54 @@ using Microsoft.EntityFrameworkCore;
 using GroupSpace23.Data;
 using GroupSpace23.Models;
 using GroupSpace23.Areas.Identity.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GroupSpace23.Controllers
 {
+    [Authorize(Roles = "SystemAdministrator,UserAdministrator,User")]
     public class MessagesController : Controller
     {
         private readonly MyDbContext _context;
+        private readonly UserManager<GroupSpace23User> _userManager;
 
-        public MessagesController(MyDbContext context)
+        public MessagesController(MyDbContext context, UserManager<GroupSpace23User> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
-        // GET: Messages
-        public async Task<IActionResult> Index(string selectMode = "R")
+        public async Task<IActionResult> Index()
         {
-            List<ModeItem> modeItems = new List<ModeItem>
-                {
-                    new ModeItem {Value = "R", Text = "Ontvangen"},
-                    new ModeItem {Value = "S", Text = "Verzonden"}
-                };
+            var currentUser = await _userManager.GetUserAsync(User);
 
-            MessageIndexViewModel viewModel = new MessageIndexViewModel();
-            viewModel.SelectMode = selectMode;
-            viewModel.Modes = new SelectList(modeItems, "Value", "Text", selectMode);
+            IQueryable<Message> messagesQuery;
 
-            if (selectMode == "R")
+            if (User.IsInRole("SystemAdministrator"))
             {
-                viewModel.Messages = _context.Messages
-                                                .Where(m => m.Deleted > DateTime.Now)
-                                                .Include(m => m.Recipient)
-                                                .Include(m => m.Sender)
-                                                .ToList();
+                // Als de gebruiker een SystemAdministrator is, toon alle berichten met Sender-informatie
+                messagesQuery = _context.Messages
+                    .Where(m => m.Deleted > DateTime.Now)
+                    .Include(m => m.Recipient)
+                    .Include(m => m.Sender);
             }
             else
             {
-                GroupSpace23User user = _context.Users.First(u => u.UserName == User.Identity.Name);
-                viewModel.Messages = _context.Messages
-                                   .Where(m => m.Deleted > DateTime.Now && m.SenderId == user.Id)
-                                   .Include(m => m.Recipient)
-                                   .Include(m => m.Sender)
-                                   .ToList();
+                // Als de gebruiker geen SystemAdministrator is, toon alleen berichten die ze hebben verstuurd zonder Sender-informatie
+                messagesQuery = _context.Messages
+                    .Where(m => m.Deleted > DateTime.Now && m.SenderId == currentUser.Id)
+                    .Include(m => m.Recipient);
             }
+
+            var viewModel = new MessageIndexViewModel
+            {
+                Messages = await messagesQuery.ToListAsync()
+            };
+
             return View(viewModel);
         }
 
-        // GET: Messages/Details/5
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Messages == null)
@@ -64,6 +66,7 @@ namespace GroupSpace23.Controllers
             var message = await _context.Messages
                 .Include(m => m.Recipient)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (message == null)
             {
                 return NotFound();
@@ -72,39 +75,58 @@ namespace GroupSpace23.Controllers
             return View(message);
         }
 
-        // GET: Messages/Create
         public IActionResult Create()
         {
-            ViewData["RecipientId"] = new SelectList(_context.Groups
-                                        .Where(g => g.Ended > DateTime.Now)
-                                        .OrderBy(g => g.Name), "Id", "Name");
-            //            ViewBag.RecipientId = new SelectList(_context.Groups.Where(g => g.Ended > DateTime.Now).OrderBy(g => g.Name), "Id", "Name");
+            var currentUser = _userManager.GetUserAsync(User).Result;
+
+            // If the user is a SystemAdministrator, show all groups
+            // If the user is not a SystemAdministrator, show only groups they have created
+            var groups = User.IsInRole("SystemAdministrator")
+                ? _context.Groups.Where(g => g.Ended > DateTime.Now).OrderBy(g => g.Name).ToList()
+                : _context.Groups.Where(g => g.StartedById == currentUser.Id && g.Ended > DateTime.Now).OrderBy(g => g.Name).ToList();
+
+            var groupSelectList = new SelectList(groups, "Id", "Name");
+
+            ViewBag.RecipientId = User.IsInRole("SystemAdministrator") ? groupSelectList : new SelectList(groups.Where(g => g.StartedById == currentUser.Id), "Id", "Name");
             return View(new Message());
         }
 
-        // POST: Messages/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Body,Sent,Deleted,RecipientId,SenderId")] Message message)
+        public async Task<IActionResult> Create([Bind("Id,Title,Body,Sent,Deleted,RecipientId,SenderId,SelectedItems")] Message message)
         {
             if (ModelState.IsValid)
             {
-                message.Sender = _context.Users.First(u => u.UserName == User.Identity.Name);
-                message.SenderId = _context.Users.First(u => u.UserName == User.Identity.Name).Id;
+                var user = await _userManager.GetUserAsync(User);
+                message.Sender = user;
+                message.SenderId = user.Id;
                 message.Sent = DateTime.Now;
+
+                // Controleer op null en wijs een standaardwaarde toe als het leeg is
+                message.Body = message.Body ?? "Default Body";
+
+                // Zorg ervoor dat de geselecteerde items correct worden vastgelegd
+                if (!string.IsNullOrEmpty(message.SelectedItems))
+                {
+                    // Voeg de geselecteerde items toe aan de Body
+                    message.Body =  message.SelectedItems;
+                }
+
                 _context.Add(message);
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["RecipientId"] = new SelectList(_context.Groups
-                                        .Where(g => g.Ended > DateTime.Now)
-                                        .OrderBy(g => g.Name), "Id", "Name", message.RecipientId);
+                .Where(g => g.Ended > DateTime.Now)
+                .OrderBy(g => g.Name), "Id", "Name", message.RecipientId);
             return View(message);
         }
 
-        // GET: Messages/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Messages == null)
@@ -112,23 +134,43 @@ namespace GroupSpace23.Controllers
                 return NotFound();
             }
 
-            var message = await _context.Messages.FindAsync(id);
+            var message = await _context.Messages
+                .Include(m => m.Recipient) // Include Recipient to access event information
+                .FirstOrDefaultAsync(m => m.Id == id);
+
             if (message == null)
             {
                 return NotFound();
             }
-            ViewData["RecipientId"] = new SelectList(_context.Groups.Where(g => g.Ended > DateTime.Now).OrderBy(g => g.Name), "Id", "Name", message.RecipientId);
-            return View(message);
+
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            // Check if the user is a SystemAdministrator or the event creator
+            if (User.IsInRole("SystemAdministrator") || message.SenderId == currentUser.Id)
+            {
+                // If the user is a SystemAdministrator, show all events
+                // If the user is the event creator, show only their own events
+                var eventsToShow = User.IsInRole("SystemAdministrator")
+                    ? _context.Groups.Where(g => g.Ended > DateTime.Now).OrderBy(g => g.Name).ToList()
+                    : _context.Groups.Where(g => g.StartedById == currentUser.Id && g.Ended > DateTime.Now).OrderBy(g => g.Name).ToList();
+
+                ViewData["RecipientId"] = new SelectList(eventsToShow, "Id", "Name", message.RecipientId);
+
+                return View(message);
+            }
+
+            // If not a SystemAdministrator or the event creator, show an unauthorized view
+            return View("Unauthorized"); // You can create a view named "Unauthorized.cshtml"
         }
 
-        // POST: Messages/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Body,Sent,Deleted,RecipientId")] Message message)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Body,Sent,Deleted,RecipientId,SelectedItems")] Message updatedMessage)
         {
-            if (id != message.Id)
+            if (id != updatedMessage.Id)
             {
                 return NotFound();
             }
@@ -137,12 +179,28 @@ namespace GroupSpace23.Controllers
             {
                 try
                 {
-                    _context.Update(message);
+                    var existingMessage = await _context.Messages
+                        .Include(m => m.Sender)
+                        .FirstOrDefaultAsync(m => m.Id == id);
+
+                    if (existingMessage == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // Update de eigenschappen van het bestaande bericht met de waarden van het updatedMessage
+                    existingMessage.Title = updatedMessage.Title;
+                    existingMessage.Body = updatedMessage.Body;
+                    existingMessage.RecipientId = updatedMessage.RecipientId;
+
+                    _context.Update(existingMessage);
                     await _context.SaveChangesAsync();
+
+                    TempData["Message"] = "Bewerking voltooid";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!MessageExists(message.Id))
+                    if (!MessageExists(id))
                     {
                         return NotFound();
                     }
@@ -151,13 +209,22 @@ namespace GroupSpace23.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RecipientId"] = new SelectList(_context.Groups.Where(g => g.Ended > DateTime.Now).OrderBy(g => g.Name), "Id", "Name", message.RecipientId);
-            return View(message);
+
+            ViewData["RecipientId"] = new SelectList(_context.Groups
+                .Where(g => g.Ended > DateTime.Now)
+                .OrderBy(g => g.Name), "Id", "Name", updatedMessage.RecipientId);
+
+            return View(updatedMessage);
         }
 
-        // GET: Messages/Delete/5
+
+
+
+
+
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Messages == null)
@@ -168,6 +235,7 @@ namespace GroupSpace23.Controllers
             var message = await _context.Messages
                 .Include(m => m.Recipient)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (message == null)
             {
                 return NotFound();
@@ -176,22 +244,31 @@ namespace GroupSpace23.Controllers
             return View(message);
         }
 
-        // POST: Messages/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Messages == null)
             {
-                return Problem("Entity set 'GroupSpace23Context.Message'  is null.");
-            }
-            var message = await _context.Messages.FindAsync(id);
-            if (message != null)
-            {
-                _context.Messages.Remove(message);
+                return Problem("Entity set 'GroupSpace23Context.Message' is null.");
             }
 
+            var message = await _context.Messages.FindAsync(id);
+
+            if (message == null)
+            {
+                return NotFound();
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser.Id != message.SenderId && !User.IsInRole("SystemAdministrator"))
+            {
+                return Forbid();
+            }
+
+            _context.Messages.Remove(message);
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 

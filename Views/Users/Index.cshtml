@@ -1,29 +1,31 @@
 ﻿@model IEnumerable<GroupSpace23.Models.UserIndexViewModel>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer _localizer
 @{
     ViewData["Title"] = "Index";
     string kommastring = "";
     string vertikaalStreepje = " | ";
 }
 
-<h1>Gebruikers</h1>
+<h1>@_localizer["Gebruikers"]</h1>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                Gebruiker
+                @_localizer["Gebruiker"]
             </th>
             <th>
-                Voornaam
+                @_localizer["Voornaam"]
             </th>
             <th>
-                Achternaam
+                @_localizer["Achternaam"]
             </th>
             <th>
-                E-mail
+                @_localizer["E-mail"]
             </th>
             <th>
-                Rollen
+                @_localizer["Rollen"]
             </th>
             <th></th>
         </tr>
@@ -74,12 +76,12 @@
             <td>
                 @if (item.Blocked)
                 {
-                        <a asp-action="UnBlock" asp-route-userName="@item.UserName">Deblokkeren</a>
+                                        <a asp-action="UnBlock" asp-route-userName="@item.UserName">@_localizer["Deblokkeren"]</a>
                     }
                     else
                     {
-                        <a asp-action="Block" asp-route-userName="@item.UserName">Blokkeren</a> @vertikaalStreepje
-                        <a asp-action="Roles" asp-route-userName="@item.UserName">Rollen</a>
+                                        <a asp-action="Block" asp-route-userName="@item.UserName">@_localizer["Blokkeren"]</a> @vertikaalStreepje
+                                        <a asp-action="Roles" asp-route-userName="@item.UserName">@_localizer["Rollen"]</a>
                     }
             </td>
          </tr>

@@ -120,6 +120,12 @@
   <data name="Boodschappen" xml:space="preserve">
     <value>Messages</value>
   </data>
+  <data name="Confidentialiteit" xml:space="preserve">
+    <value>Privacy</value>
+  </data>
+  <data name="Events" xml:space="preserve">
+    <value>Events</value>
+  </data>
   <data name="Gebruikers" xml:space="preserve">
     <value>Users</value>
   </data>
@@ -128,6 +134,9 @@
   </data>
   <data name="Groepen" xml:space="preserve">
     <value>Groups</value>
+  </data>
+  <data name="Mand" xml:space="preserve">
+    <value>Basket</value>
   </data>
   <data name="Parameters" xml:space="preserve">
     <value>Parameters</value>

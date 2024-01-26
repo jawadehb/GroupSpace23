@@ -23,8 +23,8 @@ public class MyDbContext : IdentityDbContext<GroupSpace23User>
                 new Language { Id = "- ", Name = "-", IsSystemLanguage = false, IsAvailable = DateTime.MaxValue},
                 new Language { Id = "en", Name = "English", IsSystemLanguage = true  },
                 new Language { Id = "nl", Name = "Nederlands", IsSystemLanguage = true },
-                new Language { Id = "fr", Name = "français", IsSystemLanguage = true },
-                new Language { Id = "de", Name = "Deutsch", IsSystemLanguage = true }
+                new Language { Id = "fr", Name = "français", IsSystemLanguage = true }
+                
                 );
             context.SaveChanges();
         }
@@ -151,6 +151,5 @@ public class MyDbContext : IdentityDbContext<GroupSpace23User>
     public DbSet<GroupSpace23.Models.GroupMember> GroupMembers { get; set; } = default!;
 
     public DbSet<GroupSpace23.Models.Language> Languages { get; set; } = default!;
-
-
+    public IEnumerable<object> Recipients { get; internal set; }
 }

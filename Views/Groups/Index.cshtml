@@ -1,49 +1,59 @@
 ﻿@model IEnumerable<GroupSpace23.Models.Group>
-
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer _localizer
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Event";
 }
 
-<h1>Index</h1>
+<h1>@_localizer["Event"]</h1>
 
 <p>
-    <a asp-action="Create">Nieuwe groep</a>
+    <a asp-action="Create">@_localizer["Nieuwe Event"]</a>
 </p>
+
+@using (Html.BeginForm("Index", "Groups", FormMethod.Get))
+{
+        <div class="form-group">
+            <label for="filterDate">@_localizer["Filter op datum:"]</label>
+            <input type="date" class="form-control" name="filterDate" value="@ViewBag.FilterDate" />
+            <input type="submit" value=@_localizer["Filteren"] class="btn btn-primary" />
+        </div>
+}
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                Name
+                @_localizer["Event"] 
             </th>
             <th>
-                Description of the event
+               @_localizer["Hoeveel personen"] 
             </th>
             <th>
-                Date of the event
+               @_localizer["Datum van het Eve"]
             </th>
-
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-               @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Started)
-            </td>
-            
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Wijzigen</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Tonen</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Verwijderen</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+                <tr>
+                    <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                    @Html.DisplayFor(modelItem => item.Started)
+                    </td>
+                    <td>
+                        <a asp-action="Edit"asp-route-id="@item.Id">@_localizer["Wijzigen"]</a> |
+                        <a asp-action="Details"asp-route-id="@item.Id">@_localizer["Details"]</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">@_localizer["Verwijderen"]</a>
+                    </td>
+                </tr>
+        }
     </tbody>
 </table>

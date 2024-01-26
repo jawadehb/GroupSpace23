@@ -117,13 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Bevestig Password" xml:space="preserve">
+    <value>Confimer Mot de Passe</value>
+  </data>
+  <data name="Familienaam" xml:space="preserve">
+    <value>Nom De Famille</value>
+  </data>
   <data name="Gebruikersnaam" xml:space="preserve">
-    <value>Nom d'utilisateur</value>
+    <value>Nom D'utilisatieur</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Mot de Passe</value>
   </data>
   <data name="Register" xml:space="preserve">
-    <value>Registrer</value>
+    <value>Enregistrer</value>
   </data>
   <data name="Registreer een nieuwe gebruiker." xml:space="preserve">
-    <value>Registration d'un nouvel utilisateur</value>
+    <value>Enregistrer un Nouvelle Utilisateur.</value>
+  </data>
+  <data name="Voornaam" xml:space="preserve">
+    <value>Nom</value>
   </data>
 </root>

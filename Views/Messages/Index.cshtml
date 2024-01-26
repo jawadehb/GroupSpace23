@@ -1,68 +1,65 @@
 ﻿@model MessageIndexViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@using System.Security.Claims;
+@inject IViewLocalizer _localizer
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>@_localizer["Mand"]</h1>
 
 <p>
-    <a asp-action="Create">Nieuwe boodschap</a>
+    <a asp-action="Create">@_localizer["Maak jouw bestelling"]</a>
 </p>
-
-<p>
-    you need to 
-</p>
-
-
-<form asp-controller="Messages" asp-action="Index" method="get" >
-    <h4>
-        <select type="submit" asp-for="SelectMode" asp-items="Model.Modes" onchange="this.form.submit()">
-        </select>
-    </h4>
-</form>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayName("Name of the event")
+                @_localizer["Wat is jouw event ?"]
             </th>
             <th>
-                @Html.DisplayName("What do you need ?")
-            </th>
-         
-            <th>
-                @Html.DisplayName("Verzender")
+                @_localizer["Wat heb je nodig ?"]
             </th>
             <th>
-                @Html.DisplayName("Description of the event")
+                @_localizer["Extra informatie"]
             </th>
+            @if (User.IsInRole("SystemAdministrator"))
+            {
+                    <th>
+                    @_localizer["Verzender"]
+                    </th>
+            }
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Messages) {
+        @foreach (var item in Model.Messages.Where(m => User.IsInRole("SystemAdministrator") || (m.SenderId == User.FindFirst(ClaimTypes.NameIdentifier)?.Value && m.SenderId == User.FindFirst(ClaimTypes.NameIdentifier)?.Value)))
+        {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Body)
-            </td>
-            
-            <td>
-                @Html.DisplayFor(modelItem => item.Sender.UserName)
-            </td>
             <td>
                     @Html.DisplayFor(modelItem => item.Recipient.Name)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Wijzigen</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Tonen</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Verwijderen</a>
+                    @Html.DisplayFor(modelItem => item.Body)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+            </td>
+                @if (User.IsInRole("SystemAdministrator"))
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Sender.UserName)
+                    </td>
+                }
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id"> @_localizer["Wijzigen"]</a> |
+                <a asp-action="Details" asp-route-id="@item.Id"> @_localizer["Details"]</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">@_localizer["Verwijderen"]</a>
             </td>
         </tr>
-}
+        }
+
     </tbody>
 </table>

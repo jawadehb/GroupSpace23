@@ -1,29 +1,31 @@
 ﻿@model GroupSpace23.Models.Group
-
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer _localizer
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>@_localizer["Details"]</h1>
 
 <div>
-    <h4>Group</h4>
+    <h4> @_localizer["Event"]</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            Name
+            @_localizer["Event"]
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+            
+        </dd>
+        <dt class = "col-sm-2">
+            @_localizer["Hoeveel personen"]
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Description)
         </dd>
         <dt class = "col-sm-2">
-            Description of the event
-        </dt>
-        <dd class = "col-sm-10">
-             @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-           Date of the event 
+            @_localizer["Datum van het event"]
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Started)
@@ -32,6 +34,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">@_localizer["Wijzigen"]</a> |
+    <a asp-action="Index">@_localizer["Terug naar lijst"]</a>
 </div>

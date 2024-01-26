@@ -1,25 +1,26 @@
 ﻿@model IEnumerable<GroupSpace23.Models.Language>
-
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer _localizer
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>@_localizer["Talen"]</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">@_localizer["Maak een nieuwe taal aan"]</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @_localizer["Taal"]
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IsSystemLanguage)
+                @_localizer["Systeemtaal?"]
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IsAvailable)
+                @_localizer["Beschikbaar vanaf"]
             </th>
             <th></th>
         </tr>
@@ -37,9 +38,9 @@
                 @Html.DisplayFor(modelItem => item.IsAvailable)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                     <a asp-action="Edit" asp-route-id="@item.Id"> @_localizer["Wijzigen"]</a> |
+                                <a asp-action="Details" asp-route-id="@item.Id"> @_localizer["Details"]</a> |
+                                <a asp-action="Delete" asp-route-id="@item.Id">@_localizer["Verwijderen"]</a>
             </td>
         </tr>
 }

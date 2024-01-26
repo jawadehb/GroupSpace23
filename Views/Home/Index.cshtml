@@ -1,32 +1,36 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    @using Microsoft.AspNetCore.Mvc.Localization
+    @inject IViewLocalizer _localizer
 }
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liste avec Prix</title>
-    <h4>In the "Event" tab, you define the day you will organize the event, and in the "Basket" tab, you choose what you want to order.<hr /> and here you have the list of everything yyou can order</h4>
+    <title>Lijst met Prijzen</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f4;
+            background-color: #f8f9fa;
             margin: 0;
             padding: 0;
         }
-        h4{
+
+        h4 {
             text-align: center;
+            margin-bottom: 20px;
         }
 
         .container {
             max-width: 800px;
             margin: 50px auto;
             padding: 20px;
-            background-color: #fff;
-            border: 1px solid #ddd;
+            background-color: #ffffff;
+            border: 1px solid #e1e1e1;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
@@ -34,42 +38,139 @@
         h1 {
             color: #333;
             text-align: center;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            padding: 0;
+            list-style: none;
         }
 
         .list-item {
-            list-style: none;
             border-bottom: 1px solid #ddd;
-            padding: 10px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .list-item:last-child {
-            border-bottom: none;
+            padding: 15px 0;
         }
 
         .prix {
             color: #28a745;
             font-weight: bold;
         }
+          .formule-name {
+            font-weight: bold;
+        }
+
+        .formule-details {
+            margin-left: 20px;
+            font-style: italic;
+            color: #6c757d;
+        }
+
+        .formule-details ul {
+            padding-left: 20px;
+            list-style-type: disc;
+        }
+
+        .price-container {
+            text-align: right;
+            margin-top: 5px; /* Ajout de marge en haut pour l'espacement */
+        }
     </style>
 </head>
+
 <body>
 
     <div class="container">
-        <h1>List</h1>
+        <h1>@_localizer["Lijst met Prijzen"]</h1>
         <ul>
-            <li class="list-item">Table 1.5m <span class="prix">5€</span></li>
-            <li class="list-item">Chair <span class="prix">3€</span></li>
-            <li class="list-item">Gold-plated plates with golden border 27cm <span class="prix">0.35€/st</span></li>
-            <li class="list-item">Medium gold-plated plates with golden border 20cm <span class="prix">0.25€/st</span></li>
-            <li class="list-item">Cup and saucer with golden border 20cm <span class="prix">0.30€/st</span></li>
-            <li class="list-item">Gold-plated silverware </br>- Fork</br>- Spoon</br>- Knife </br>- Teaspoon <span class="prix">0.35€/st
-               </span>
+            <li class="list-item">
+                <span>@_localizer["Formule 1: Klassieke Eleganti"]</span>
+                <div class="formule-details">
+                    <ul>
+                        <li>@_localizer["Bestek van zilver"]</li>
+                        <li>@_localizer["Borden van wit porselein"]</li>
+                        <li>@_localizer["Kopjes en schoteltjes in bijpassende stijl"]</li>
+                        <li>@_localizer["Glaswerk met kristallen voet"]</li>
+                        <li>@_localizer["Luxe bloemstuk als tafelcentrum"]</li>
+                        <li>@_localizer["Tafelkleed van wit satijn"]</li>
+                        <li>@_localizer["Witte stoelhoezen met satijnen strikken"]</li>
+                    </ul>
+                </div>
+                <div class="price-container">
+                    <span class="prix">35€</span>
+                </div>
             </li>
+            <li class="list-item">
+                <span><bold>@_localizer["Formule 2: Rustieke Chique"]</span>
+                <div class="formule-details">
+                    <ul>
+                        <li>@_localizer["Bestek van vintage roestvrij staal"]</li>
+                        <li>@_localizer["Ambachtelijke keramische borden"]</li>
+                        <li>@_localizer["Kopjes van terracotta met bijpassende schoteltjes"]</li>
+                        <li>@_localizer["Gravure op wijnglazen"]</li>
+                        <li>@_localizer["Tafelcentrum met wilde bloemen en houten lantaarns"]</li>
+                        <li>@_localizer["Natuurlijk linnen tafelkleed"]</li>
+                        <li>@_localizer["Stoelhoezen van jute met kanten linten"]</li>
+                    </ul>
+                </div>
+                <div class="price-container">
+                    <span class="prix">30€</span>
+                </div>
+            </li>
+            <li class="list-item">
+                <span>@_localizer["Formule 3: Moderne Glamour"]</span>
+                <div class="formule-details">
+                    <ul>
+                        <li>@_localizer["Bestek van roségoud"]</li>
+                        <li>@_localizer["Designborden van getint glas"]</li>
+                        <li>@_localizer["Stijlvolle koffiekopjes en bijpassende schoteltjes"]</li>
+                        <li>@_localizer["Champagneglazen met geslepen kristal"]</li>
+                        <li>@_localizer["Tafelcentrum met drijvende kaarsen en metalen elementen"]</li>
+                        <li>@_localizer["Zwart satijnen tafelkleed"]</li>
+                        <li>@_localizer["Zwarte stoelhoezen met strikken van fluweel"]</li>
+                    </ul>
+                </div>
+                <div class="price-container">
+                    <span class="prix">40€</span>
+                </div>
+            </li>
+            <li class="list-item">
+                <span>@_localizer["Formule 4: Printemps Pastel"]</span>
+                <div class="formule-details">
+                    <ul>
+                        <li>@_localizer["Bestek van verzilverd roestvrij staal"]</li>
+                        <li>@_localizer["Pastelkleurig porseleinen servies"]</li>
+                        <li>@_localizer["Theekopjes en bijpassende schoteltjes"]</li>
+                        <li>@_localizer["Gegraveerde waterglazen"]</li>
+                        <li>@_localizer["Tafelcentrum met lentebloemen en lichte slingers"]</li>
+                        <li>@_localizer["Pastelkleurig linnen tafelkleed"]</li>
+                        <li>@_localizer["Bijpassende stoelhoezen met linten van organza"]</li>
+                    </ul>
+                </div>
+                <div class="price-container">
+                    <span class="prix">35€</span>
+                </div>
+            </li>
+            <li class="list-item">
+                <span>@_localizer["Formule 5: Thématique Vintage"]</span>
+                <div class="formule-details">
+                    <ul>
+                        <li>@_localizer["Bestek van verouderd messing"]</li>
+                        <li>@_localizer["Retro porseleinen borden"]</li>
+                        <li>@_localizer["Vintage kopjes en bijpassende schoteltjes"]</li>
+                        <li>@_localizer["Gegraveerde retroglazen"]</li>
+                        <li>@_localizer["Tafelcentrum met oude boeken, kaarsen en vintage objecten"]</li>
+                        <li>@_localizer["Kanten vintage tafelkleed"]</li>
+                        <li>@_localizer["Stoelhoezen van jutekoffiezakken met linten van kant"]</li>
+                    </ul>
+                </div>
+                <div class="price-container">
+                    <span class="prix">38€</span>
+                </div>
+            </li>
+            <!-- Ajoutez d'autres formules ici -->
         </ul>
     </div>
 
 </body>
+
 </html>

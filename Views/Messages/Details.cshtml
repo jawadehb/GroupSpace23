@@ -1,48 +1,46 @@
 ﻿@model GroupSpace23.Models.Message
-
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer _localizer
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>@_localizer["Details"]</h1>
 
 <div>
-    <h4>Message</h4>
+    <h4>@_localizer["Bestelling"]</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
+            @_localizer["Wat is jouw event"]
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
+            @Html.DisplayFor(model => model.Recipient.Name)
+            
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Body)
+            @_localizer["Wat heb je nodig"]
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Body)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Sent)
+            @_localizer["Extra informatie"]
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class = "col-sm-2">
+            @_localizer["Order gamaakt de"]
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Sent)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Deleted)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Deleted)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Recipient)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Recipient.Id)
-        </dd>
+        
+        
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model?.Id"> @_localizer["Wijzigen"]</a> |
+    <a asp-action="Index"> @_localizer["Terug naar overzicht"]</a>
 </div>

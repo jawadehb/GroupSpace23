@@ -1,12 +1,13 @@
 ﻿@model GroupSpace23.Models.Language
-
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer _localizer
 @{
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1>@_localizer["Wijzigen"]</h1>
 
-<h4>Language</h4>
+<h4>@_localizer["Taal"]</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -14,29 +15,29 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
+                <label asp-for="Name" class="control-label">@_localizer["Taal"]</label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsSystemLanguage" /> @Html.DisplayNameFor(model => model.IsSystemLanguage)
+                    <input class="form-check-input" asp-for="IsSystemLanguage" /> @_localizer["Systeemtaal?"]
                 </label>
             </div>
             <div class="form-group">
-                <label asp-for="IsAvailable" class="control-label"></label>
+                <label asp-for="IsAvailable" class="control-label">@_localizer["Beschikbaar vanaf"]</label>
                 <input asp-for="IsAvailable" class="form-control" />
                 <span asp-validation-for="IsAvailable" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value=@_localizer["Bevestigen"] class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">@_localizer["Terug naar lijst"]</a>
 </div>
 
 @section Scripts {

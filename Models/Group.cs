@@ -1,4 +1,5 @@
 ﻿using GroupSpace23.Areas.Identity.Data;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.Permissions;
@@ -7,13 +8,18 @@ namespace GroupSpace23.Models
 {
     public class Group
     {
-        public int Id { get; set; }
+        // Voeg deze eigenschap toe voor het filteren op startdatum
+     
+        [DataType(DataType.Date)]
+        public DateTime? StartDate { get; set; }
 
+        public int Id { get; set; }
+        [Required(ErrorMessage = "Deze veld is verplicht")]
         [Display(Name = "Naam")]
         public string Name { get; set; }
-
+        [Required(ErrorMessage = "Deze veld is verplicht")]
         [Display(Name = "Omschrijving")]
-        public string Description { get; set; }
+        public String Description { get; set; }
 
         [ForeignKey("GroupSpace23User")]
         public string StartedById { get; set; } = Globals.DummyUser.Id;
@@ -28,7 +34,6 @@ namespace GroupSpace23.Models
         [DataType(DataType.Date)]
         public DateTime Ended { get; set; } = DateTime.MaxValue;
     }
-
 
     public class GroupMember
     {
@@ -53,5 +58,4 @@ namespace GroupSpace23.Models
 
         public bool IsHost { get; set; } = false;
     }
-
 }

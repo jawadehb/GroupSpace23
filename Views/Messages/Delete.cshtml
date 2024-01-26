@@ -1,40 +1,42 @@
 ﻿@model GroupSpace23.Models.Message
-
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer _localizer
 @{
     ViewData["Title"] = "Delete";
 }
 
-<h1>Delete</h1>
+<h1>@_localizer["Verwijderen"]</h1>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>@_localizer["Ben je zeker dat je dit wilt verwijderen?"]</h3>
 <div>
-    <h4>Message</h4>
+    <h4>@_localizer["Bestelling"]</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            Name of the event
+            @_localizer["Event"]
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
+            @Html.DisplayFor(model => model.Recipient.Name)
+
         </dd>
         <dt class = "col-sm-2">
-            What do you need ?
+            @_localizer["Wat heb je nodig"]
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Body)
         </dd>
         <dt class = "col-sm-2">
-           Description of the event
+            @_localizer["Extra informatie"]
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Recipient.Name)
+            @Html.DisplayFor(model => model.Title)
         </dd>
 
     </dl>
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <input type="submit" value=@_localizer["Verwijderen"] class="btn btn-danger" /> |
+        <a asp-action="Index">@_localizer["Terug naar overzicht"]</a>
     </form>
 </div>
