@@ -12,7 +12,7 @@ namespace GroupSpace23.Migrations
         {
             migrationBuilder.AddColumn<int>(
                 name: "Number",
-                table: "Messages",
+                table: "Mands",
                 type: "int",
                 nullable: false,
                 defaultValue: 0);
@@ -23,7 +23,7 @@ namespace GroupSpace23.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "Number",
-                table: "Messages");
+                table: "Mands");
         }
     }
 }

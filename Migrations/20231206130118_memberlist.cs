@@ -11,21 +11,21 @@ namespace GroupSpace23.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(
-                name: "GroupId",
+                name: "EvenementId",
                 table: "AspNetUsers",
                 type: "int",
                 nullable: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_GroupId",
+                name: "IX_AspNetUsers_EvenementId",
                 table: "AspNetUsers",
-                column: "GroupId");
+                column: "EvenementId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_AspNetUsers_Groups_GroupId",
+                name: "FK_AspNetUsers_Evenements_EvenementId",
                 table: "AspNetUsers",
-                column: "GroupId",
-                principalTable: "Groups",
+                column: "EvenementId",
+                principalTable: "Evenements",
                 principalColumn: "Id");
         }
 
@@ -33,15 +33,15 @@ namespace GroupSpace23.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_AspNetUsers_Groups_GroupId",
+                name: "FK_AspNetUsers_Evenements_EvenementId",
                 table: "AspNetUsers");
 
             migrationBuilder.DropIndex(
-                name: "IX_AspNetUsers_GroupId",
+                name: "IX_AspNetUsers_EvenementId",
                 table: "AspNetUsers");
 
             migrationBuilder.DropColumn(
-                name: "GroupId",
+                name: "EvenementId",
                 table: "AspNetUsers");
         }
     }

@@ -12,19 +12,19 @@ namespace GroupSpace23.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_AspNetUsers_Groups_GroupId",
+                name: "FK_AspNetUsers_Evenements_EvenementId",
                 table: "AspNetUsers");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Message_AspNetUsers_SenderId",
-                table: "Message");
+                name: "FK_Mand_AspNetUsers_SenderId",
+                table: "Mand");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Message_Groups_RecipientId",
-                table: "Message");
+                name: "FK_Mand_Evenements_RecipientId",
+                table: "Mand");
 
             migrationBuilder.DropIndex(
-                name: "IX_AspNetUsers_GroupId",
+                name: "IX_AspNetUsers_EvenementId",
                 table: "AspNetUsers");
 
             migrationBuilder.DropPrimaryKey(
@@ -32,11 +32,11 @@ namespace GroupSpace23.Migrations
                 table: "Parameter");
 
             migrationBuilder.DropPrimaryKey(
-                name: "PK_Message",
-                table: "Message");
+                name: "PK_Mand",
+                table: "Mand");
 
             migrationBuilder.DropColumn(
-                name: "GroupId",
+                name: "EvenementId",
                 table: "AspNetUsers");
 
             migrationBuilder.RenameTable(
@@ -44,18 +44,18 @@ namespace GroupSpace23.Migrations
                 newName: "Parameters");
 
             migrationBuilder.RenameTable(
-                name: "Message",
-                newName: "Messages");
+                name: "Mand",
+                newName: "Mands");
 
             migrationBuilder.RenameIndex(
-                name: "IX_Message_SenderId",
-                table: "Messages",
-                newName: "IX_Messages_SenderId");
+                name: "IX_Mand_SenderId",
+                table: "Mands",
+                newName: "IX_Mands_SenderId");
 
             migrationBuilder.RenameIndex(
-                name: "IX_Message_RecipientId",
-                table: "Messages",
-                newName: "IX_Messages_RecipientId");
+                name: "IX_Mand_RecipientId",
+                table: "Mands",
+                newName: "IX_Mands_RecipientId");
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_Parameters",
@@ -63,17 +63,17 @@ namespace GroupSpace23.Migrations
                 column: "Name");
 
             migrationBuilder.AddPrimaryKey(
-                name: "PK_Messages",
-                table: "Messages",
+                name: "PK_Mands",
+                table: "Mands",
                 column: "Id");
 
             migrationBuilder.CreateTable(
-                name: "GroupMembers",
+                name: "EvenementMembers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    GroupId = table.Column<int>(type: "int", nullable: false),
+                    EvenementId = table.Column<int>(type: "int", nullable: false),
                     MemberId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     AddedById = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Added = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -83,55 +83,55 @@ namespace GroupSpace23.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GroupMembers", x => x.Id);
+                    table.PrimaryKey("PK_EvenementMembers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_GroupMembers_AspNetUsers_AddedById",
+                        name: "FK_EvenementMembers_AspNetUsers_AddedById",
                         column: x => x.AddedById,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
-                        name: "FK_GroupMembers_AspNetUsers_MemberId",
+                        name: "FK_EvenementMembers_AspNetUsers_MemberId",
                         column: x => x.MemberId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
-                        name: "FK_GroupMembers_Groups_GroupId",
-                        column: x => x.GroupId,
-                        principalTable: "Groups",
+                        name: "FK_EvenementMembers_Evenements_EvenementId",
+                        column: x => x.EvenementId,
+                        principalTable: "Evenements",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_GroupMembers_AddedById",
-                table: "GroupMembers",
+                name: "IX_EvenementMembers_AddedById",
+                table: "EvenementMembers",
                 column: "AddedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GroupMembers_GroupId",
-                table: "GroupMembers",
-                column: "GroupId");
+                name: "IX_EvenementMembers_EvenementId",
+                table: "EvenementMembers",
+                column: "EvenementId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GroupMembers_MemberId",
-                table: "GroupMembers",
+                name: "IX_EvenementMembers_MemberId",
+                table: "EvenementMembers",
                 column: "MemberId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Messages_AspNetUsers_SenderId",
-                table: "Messages",
+                name: "FK_Mands_AspNetUsers_SenderId",
+                table: "Mands",
                 column: "SenderId",
                 principalTable: "AspNetUsers",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.NoAction);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Messages_Groups_RecipientId",
-                table: "Messages",
+                name: "FK_Mands_Evenements_RecipientId",
+                table: "Mands",
                 column: "RecipientId",
-                principalTable: "Groups",
+                principalTable: "Evenements",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.NoAction);
         }
@@ -140,44 +140,44 @@ namespace GroupSpace23.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Messages_AspNetUsers_SenderId",
-                table: "Messages");
+                name: "FK_Mands_AspNetUsers_SenderId",
+                table: "Mands");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Messages_Groups_RecipientId",
-                table: "Messages");
+                name: "FK_Mands_Evenements_RecipientId",
+                table: "Mands");
 
             migrationBuilder.DropTable(
-                name: "GroupMembers");
+                name: "EvenementMembers");
 
             migrationBuilder.DropPrimaryKey(
                 name: "PK_Parameters",
                 table: "Parameters");
 
             migrationBuilder.DropPrimaryKey(
-                name: "PK_Messages",
-                table: "Messages");
+                name: "PK_Mands",
+                table: "Mands");
 
             migrationBuilder.RenameTable(
                 name: "Parameters",
                 newName: "Parameter");
 
             migrationBuilder.RenameTable(
-                name: "Messages",
-                newName: "Message");
+                name: "Mands",
+                newName: "Mand");
 
             migrationBuilder.RenameIndex(
-                name: "IX_Messages_SenderId",
-                table: "Message",
-                newName: "IX_Message_SenderId");
+                name: "IX_Mands_SenderId",
+                table: "Mand",
+                newName: "IX_Mand_SenderId");
 
             migrationBuilder.RenameIndex(
-                name: "IX_Messages_RecipientId",
-                table: "Message",
-                newName: "IX_Message_RecipientId");
+                name: "IX_Mands_RecipientId",
+                table: "Mand",
+                newName: "IX_Mand_RecipientId");
 
             migrationBuilder.AddColumn<int>(
-                name: "GroupId",
+                name: "EvenementId",
                 table: "AspNetUsers",
                 type: "int",
                 nullable: true);
@@ -188,35 +188,35 @@ namespace GroupSpace23.Migrations
                 column: "Name");
 
             migrationBuilder.AddPrimaryKey(
-                name: "PK_Message",
-                table: "Message",
+                name: "PK_Mand",
+                table: "Mand",
                 column: "Id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_GroupId",
+                name: "IX_AspNetUsers_EvenementId",
                 table: "AspNetUsers",
-                column: "GroupId");
+                column: "EvenementId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_AspNetUsers_Groups_GroupId",
+                name: "FK_AspNetUsers_Evenements_EvenementId",
                 table: "AspNetUsers",
-                column: "GroupId",
-                principalTable: "Groups",
+                column: "EvenementId",
+                principalTable: "Evenements",
                 principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Message_AspNetUsers_SenderId",
-                table: "Message",
+                name: "FK_Mand_AspNetUsers_SenderId",
+                table: "Mand",
                 column: "SenderId",
                 principalTable: "AspNetUsers",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.NoAction);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Message_Groups_RecipientId",
-                table: "Message",
+                name: "FK_Mand_Evenements_RecipientId",
+                table: "Mand",
                 column: "RecipientId",
-                principalTable: "Groups",
+                principalTable: "Evenements",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.NoAction) ;
         }

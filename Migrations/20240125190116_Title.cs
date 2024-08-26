@@ -10,19 +10,35 @@ namespace GroupSpace23.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
-                name: "Info",
-                table: "Messages",
-                newName: "Title");
+            // Check if the 'Info' column exists before renaming
+            migrationBuilder.Sql(@"
+                IF EXISTS (
+                    SELECT * 
+                    FROM INFORMATION_SCHEMA.COLUMNS 
+                    WHERE TABLE_NAME = 'Mands' 
+                      AND COLUMN_NAME = 'Info'
+                )
+                BEGIN
+                    EXEC sp_rename 'Mands.Info', 'Title', 'COLUMN';
+                END
+            ");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
-                name: "Title",
-                table: "Messages",
-                newName: "Info");
+            // Check if the 'Title' column exists before renaming back
+            migrationBuilder.Sql(@"
+                IF EXISTS (
+                    SELECT * 
+                    FROM INFORMATION_SCHEMA.COLUMNS 
+                    WHERE TABLE_NAME = 'Mands' 
+                      AND COLUMN_NAME = 'Title'
+                )
+                BEGIN
+                    EXEC sp_rename 'Mands.Title', 'Info', 'COLUMN';
+                END
+            ");
         }
     }
 }

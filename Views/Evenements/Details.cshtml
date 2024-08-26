@@ -1,0 +1,39 @@
+﻿@model GroupSpace23.Models.Evenement
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer _localizer
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>@_localizer["Details"]</h1>
+
+<div>
+    <h4> @_localizer["Event"]</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @_localizer["Event"]
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+            
+        </dd>
+        <dt class = "col-sm-2">
+            @_localizer["Hoeveel personen"]
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class = "col-sm-2">
+            @_localizer["Datum van het event"]
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Started)
+        </dd>
+        
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">@_localizer["Wijzigen"]</a> |
+    <a asp-action="Index">@_localizer["Terug naar lijst"]</a>
+</div>

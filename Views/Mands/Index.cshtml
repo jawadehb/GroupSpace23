@@ -1,0 +1,65 @@
+﻿@model MandIndexViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@using System.Security.Claims;
+@inject IViewLocalizer _localizer
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>@_localizer["Mand"]</h1>
+
+<p>
+    <a asp-action="Create">@_localizer["Maak jouw bestelling"]</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @_localizer["Wat is jouw event ?"]
+            </th>
+            <th>
+                @_localizer["Wat heb je nodig ?"]
+            </th>
+            <th>
+                @_localizer["Extra informatie"]
+            </th>
+            @if (User.IsInRole("SystemAdministrator"))
+            {
+                    <th>
+                    @_localizer["Verzender"]
+                    </th>
+            }
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Mands.Where(m => User.IsInRole("SystemAdministrator") || (m.SenderId == User.FindFirst(ClaimTypes.NameIdentifier)?.Value && m.SenderId == User.FindFirst(ClaimTypes.NameIdentifier)?.Value)))
+        {
+        <tr>
+            <td>
+                    @Html.DisplayFor(modelItem => item.Recipient.Name)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.Body)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+            </td>
+                @if (User.IsInRole("SystemAdministrator"))
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Sender.UserName)
+                    </td>
+                }
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id"> @_localizer["Wijzigen"]</a> |
+                <a asp-action="Details" asp-route-id="@item.Id"> @_localizer["Details"]</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">@_localizer["Verwijderen"]</a>
+            </td>
+        </tr>
+        }
+
+    </tbody>
+</table>

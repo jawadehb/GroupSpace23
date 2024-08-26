@@ -25,7 +25,7 @@ namespace GroupSpace23.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("GroupSpace23.Models.Group", b =>
+            modelBuilder.Entity("GroupSpace23.Models.Evenement", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -49,7 +49,7 @@ namespace GroupSpace23.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Groups");
+                    b.ToTable("Evenements");
                 });
 #pragma warning restore 612, 618
         }

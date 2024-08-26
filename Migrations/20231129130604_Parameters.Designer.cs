@@ -125,7 +125,7 @@ namespace GroupSpace23.Migrations
                     b.ToTable("Groups");
                 });
 
-            modelBuilder.Entity("GroupSpace23.Models.Message", b =>
+            modelBuilder.Entity("GroupSpace23.Models.Mand", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -154,7 +154,7 @@ namespace GroupSpace23.Migrations
 
                     b.HasIndex("RecipientId");
 
-                    b.ToTable("Message");
+                    b.ToTable("Mand");
                 });
 
             modelBuilder.Entity("GroupSpace23.Models.Parameter", b =>
@@ -315,7 +315,7 @@ namespace GroupSpace23.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("GroupSpace23.Models.Message", b =>
+            modelBuilder.Entity("GroupSpace23.Models.Mand", b =>
                 {
                     b.HasOne("GroupSpace23.Models.Group", "Recipient")
                         .WithMany()

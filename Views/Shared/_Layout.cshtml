@@ -30,11 +30,11 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Groups" asp-action="Index">@_localizer["Events"]</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Evenements" asp-action="Index">@_localizer["Evenements"]</a>
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Messages" asp-action="Index">@_localizer["Mand"]</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Mands" asp-action="Index">@_localizer["Mand"]</a>
                             </li>
                         }
                         @if (User.IsInRole("SystemAdministrator"))

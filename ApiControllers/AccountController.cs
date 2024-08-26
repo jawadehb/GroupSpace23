@@ -30,7 +30,7 @@ namespace GroupSpace23.ApiControllers
 
         [HttpPost]
         [Route("Login")]
-        [Route("/api/Login")]
+        [Route("    ")]
         public async Task<ActionResult<Boolean>> PutAccount([FromBody] LoginModel @login)
         {
             var result = await _signInManager.PasswordSignInAsync(@login.Name, @login.Password, false, lockoutOnFailure: false);

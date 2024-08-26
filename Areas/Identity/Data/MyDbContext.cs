@@ -60,6 +60,7 @@ public class MyDbContext : IdentityDbContext<GroupSpace23User>
             var result = await userManager.CreateAsync(adminUser, "Abc!12345");
 
         }
+       
 
 
         GroupSpace23User dummy = context.Users.FirstOrDefault(u => u.UserName == "Dummy");
@@ -85,25 +86,27 @@ public class MyDbContext : IdentityDbContext<GroupSpace23User>
         }
 
 
-        if (!context.Groups.Any())
+        if (!context.Evenements.Any())
         {
-            context.Groups.Add(new Group { Description = "Dummy", Name = "Dummy", Ended = DateTime.Now });
+            context.Evenements.Add(new Evenement { Description = "500  people", Name = "Son's Wedding", StartDate = new DateTime(2024 - 11 - 07), });
+            context.Evenements.Add(new Evenement { Description = "100  people", Name = "Daughters Birthday", StartDate = new DateTime(2024 - 09 - 12), });
             context.SaveChanges();
         }
-        Group dummyGroup = context.Groups.FirstOrDefault(g => g.Name == "Dummy");
+        Evenement dummyEvenement = context.Evenements.FirstOrDefault(g => g.Name == "Dummy");
 
         // Was nodig om bij de migratie een foreign-key constraint probleem te hebben
-        //List <Group> groups = context.Groups.ToList();
-        //foreach (Group g in groups)
+        //List <Evenement> evenements = context.Evenements.ToList();
+        //foreach (Evenement g in evenements)
         //{ 
         //    g.StartedById = dummy.Id;
         //    context.Update(g);
         //}
         //context.SaveChanges();
 
-        if (!context.Messages.Any())
+        if (!context.Mands.Any())
         {
-            context.Messages.Add(new Message { Title = "Dummy", Body = "", Sent = DateTime.Now, Deleted = DateTime.Now, Recipient = dummyGroup });
+            context.Mands.Add(new Mand { RecipientId = 2, Body = "Formule 1 : Klassieke Elegantie", Title = "Telefoon nummer: 0489 25 26 37"});
+            context.Mands.Add(new Mand { RecipientId = 1, Body = "Formule 3 : Moderne Glamour", Title = "Ik Betaal de helft cash en de rest Mastercard" });
             context.SaveChanges();
         }
         context.SaveChanges();
@@ -142,14 +145,16 @@ public class MyDbContext : IdentityDbContext<GroupSpace23User>
         Globals.ConfigureMail();
     }
 
-    public DbSet<GroupSpace23.Models.Group> Groups { get; set; } = default!;
+    public DbSet<GroupSpace23.Models.Evenement> Evenements { get; set; } = default!;
 
-    public DbSet<GroupSpace23.Models.Message> Messages { get; set; } = default!;
+    public DbSet<GroupSpace23.Models.Mand> Mands { get; set; } = default!;
 
     public DbSet<GroupSpace23.Models.Parameter> Parameters { get; set; } = default!;
 
-    public DbSet<GroupSpace23.Models.GroupMember> GroupMembers { get; set; } = default!;
+    public DbSet<GroupSpace23.Models.EvenementMember> EvenementMembers { get; set; } = default!;
 
     public DbSet<GroupSpace23.Models.Language> Languages { get; set; } = default!;
     public IEnumerable<object> Recipients { get; internal set; }
+
+    public DbSet<GroupSpace23.ApiModels.LoginModel> LoginModel { get; set; } = default!;
 }

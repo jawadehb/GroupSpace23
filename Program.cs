@@ -18,17 +18,18 @@ namespace GroupSpace23
             var builder = WebApplication.CreateBuilder(args);
             var connectionString = builder.Configuration.GetConnectionString("GroupSpaceContext");
 
+            // Add services to the container.
+
             builder.Services.AddDbContext<MyDbContext>(options =>
                 options.UseSqlServer(connectionString ?? throw new InvalidOperationException("Connection string 'GroupSpaceContext' not found.")));
 
-            builder.Services.AddDefaultIdentity<GroupSpace23User>((IdentityOptions options) => options.SignIn.RequireConfirmedAccount = true)
-               .AddRoles<IdentityRole>()
-               .AddEntityFrameworkStores<MyDbContext>();
+            builder.Services.AddDefaultIdentity<GroupSpace23User>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<MyDbContext>();
 
             builder.Services.AddTransient<IEmailSender, MailKitEmailSender>();
- 
-            // De volgende configuratie van de MailKit wordt toegevoegd als demonstratie, maar gebruiken we niet.
-            // Deze is "overschreven" door het gebruik van de database-parameters in Globals, en ge�nitialiseerd in de data Initializer
+
+            // Configure MailKit (Optional, if needed for sending emails)
             builder.Services.Configure<MailKitOptions>(options =>
             {
                 options.Server = builder.Configuration["ExternalProviders:MailKit:SMTP:Address"];
@@ -37,7 +38,7 @@ namespace GroupSpace23
                 options.Password = builder.Configuration["ExternalProviders:MailKit:SMTP:Password"];
                 options.SenderEmail = builder.Configuration["ExternalProviders:MailKit:SMTP:SenderEmail"];
                 options.SenderName = builder.Configuration["ExternalProviders:MailKit:SMTP:SenderName"];
-                options.Security = true;  // true zet ssl or tls aan
+                options.Security = true; // Enables SSL or TLS
             });
 
             // Add services for globalization/localization
@@ -46,21 +47,19 @@ namespace GroupSpace23
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                 .AddDataAnnotationsLocalization();
 
-            // Add services to the container.
             builder.Services.AddControllersWithViews();
-
-            // Add services for RESTFull API
             builder.Services.AddControllers();
+
+            // Configure Swagger for API documentation
             builder.Services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1",
-                                new OpenApiInfo { Title = "GroupSpace2023", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "GroupSpace2023", Version = "v1" });
             });
 
-
+            // Configure Identity options
             builder.Services.Configure<IdentityOptions>(options =>
             {
-                // Password settings.
+                // Password settings
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
                 options.Password.RequireNonAlphanumeric = true;
@@ -68,58 +67,88 @@ namespace GroupSpace23
                 options.Password.RequiredLength = 6;
                 options.Password.RequiredUniqueChars = 1;
 
-                // Lockout settings.
+                // Lockout settings
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
                 options.Lockout.MaxFailedAccessAttempts = 5;
                 options.Lockout.AllowedForNewUsers = true;
 
-                // User settings.
+                // User settings
                 options.User.AllowedUserNameCharacters =
                 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
                 options.User.RequireUniqueEmail = false;
             });
 
+            // Configure CORS
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyMethod()
+                           .AllowAnyHeader();
+                });
+            });
 
             var app = builder.Build();
-            Globals.App = app;          // Zorg ervoor dat we altijd een instantie van de huidige app bijhouden
 
-            // Configure the HTTP request pipeline.
+            // Ensure we always have an instance of the current app
+            Globals.App = app;
+
+            // Configure the HTTP request pipeline
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
+                app.UseHsts(); // Enforce HTTPS
             }
-            else // Gebruik van RESTFull API tijdens ontwikkeling
+            else
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "GroupSpace2023 v1"));
             }
-            app.UseStaticFiles();
 
+            app.UseStaticFiles();
             app.UseRouting();
+            app.UseCors("AllowAllOrigins");
+            app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseMiddleware<CustomErrorHandlingMiddleware>();
 
+            // Database initialization and seeding
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
-                MyDbContext context = new MyDbContext(services.GetRequiredService<DbContextOptions<MyDbContext>>());
-                var userManager = services.GetRequiredService<UserManager<GroupSpace23User>>();
-                await MyDbContext.DataInitializer(context, userManager);
+                try
+                {
+                    MyDbContext context = new MyDbContext(services.GetRequiredService<DbContextOptions<MyDbContext>>());
+                    var userManager = services.GetRequiredService<UserManager<GroupSpace23User>>();
+                    await MyDbContext.DataInitializer(context, userManager);
+                }
+                catch (Exception ex)
+                {
+                    // Log the error (uncomment ex variable name and write a log.)
+                    // logger.LogError(ex, "An error occurred seeding the DB.");
+                }
             }
 
-            var supportedCultures = new[] {"en", "fr", "nl" };
+            // Configure localization
+            var supportedCultures = new[] { "en", "fr", "nl" };
             var localizationOptions = new RequestLocalizationOptions().SetDefaultCulture(supportedCultures[0])
                 .AddSupportedCultures(supportedCultures)
                 .AddSupportedUICultures(supportedCultures);
             app.UseRequestLocalization(localizationOptions);
 
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
-            app.MapRazorPages();
-
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            // Configure endpoints
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
+                endpoints.MapFallbackToController("Error", "Home");
+            });
 
             app.Run();
         }

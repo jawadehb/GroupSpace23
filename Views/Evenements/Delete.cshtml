@@ -1,0 +1,41 @@
+﻿@model GroupSpace23.Models.Evenement
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer _localizer
+@{
+    ViewData["Title"] = "Verwijderen";
+}
+
+<h1> @_localizer["Verwijderen"]</h1>
+
+<h3>@_localizer["Ben je zeker dat je dit wilt verwijderen?"]</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @_localizer["Event"]
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+
+        </dd>
+        <dt class = "col-sm-2">
+            @_localizer["Hoeveel personen"]
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class = "col-sm-2">
+            @_localizer["Datum van het event"]
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Started)
+        </dd>
+        
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value=@_localizer["Verwijderen"] class="btn btn-danger" /> |
+        <a asp-action="Index">@_localizer["Terug naar lijst"]</a>
+    </form>
+</div>

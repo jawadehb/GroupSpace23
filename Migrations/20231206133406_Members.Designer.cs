@@ -98,7 +98,7 @@ namespace GroupSpace23.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("GroupSpace23.Models.Group", b =>
+            modelBuilder.Entity("GroupSpace23.Models.Evenement", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -128,10 +128,10 @@ namespace GroupSpace23.Migrations
 
                     b.HasIndex("StartedById");
 
-                    b.ToTable("Groups");
+                    b.ToTable("Evenements");
                 });
 
-            modelBuilder.Entity("GroupSpace23.Models.GroupMember", b =>
+            modelBuilder.Entity("GroupSpace23.Models.EvenementMember", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -146,7 +146,7 @@ namespace GroupSpace23.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("GroupId")
+                    b.Property<int>("EvenementId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsHost")
@@ -167,14 +167,14 @@ namespace GroupSpace23.Migrations
 
                     b.HasIndex("AddedById");
 
-                    b.HasIndex("GroupId");
+                    b.HasIndex("EvenementId");
 
                     b.HasIndex("MemberId");
 
-                    b.ToTable("GroupMembers");
+                    b.ToTable("EvenementMembers");
                 });
 
-            modelBuilder.Entity("GroupSpace23.Models.Message", b =>
+            modelBuilder.Entity("GroupSpace23.Models.Mand", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -209,7 +209,7 @@ namespace GroupSpace23.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("Messages");
+                    b.ToTable("Mands");
                 });
 
             modelBuilder.Entity("GroupSpace23.Models.Parameter", b =>
@@ -370,7 +370,7 @@ namespace GroupSpace23.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("GroupSpace23.Models.Group", b =>
+            modelBuilder.Entity("GroupSpace23.Models.Evenement", b =>
                 {
                     b.HasOne("GroupSpace23.Areas.Identity.Data.GroupSpace23User", "StartedBy")
                         .WithMany()
@@ -381,7 +381,7 @@ namespace GroupSpace23.Migrations
                     b.Navigation("StartedBy");
                 });
 
-            modelBuilder.Entity("GroupSpace23.Models.GroupMember", b =>
+            modelBuilder.Entity("GroupSpace23.Models.EvenementMember", b =>
                 {
                     b.HasOne("GroupSpace23.Areas.Identity.Data.GroupSpace23User", "AddedBy")
                         .WithMany()
@@ -389,9 +389,9 @@ namespace GroupSpace23.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("GroupSpace23.Models.Group", "Group")
+                    b.HasOne("GroupSpace23.Models.Evenement", "Evenement")
                         .WithMany()
-                        .HasForeignKey("GroupId")
+                        .HasForeignKey("EvenementId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -403,14 +403,14 @@ namespace GroupSpace23.Migrations
 
                     b.Navigation("AddedBy");
 
-                    b.Navigation("Group");
+                    b.Navigation("Evenement");
 
                     b.Navigation("Member");
                 });
 
-            modelBuilder.Entity("GroupSpace23.Models.Message", b =>
+            modelBuilder.Entity("GroupSpace23.Models.Mand", b =>
                 {
-                    b.HasOne("GroupSpace23.Models.Group", "Recipient")
+                    b.HasOne("GroupSpace23.Models.Evenement", "Recipient")
                         .WithMany()
                         .HasForeignKey("RecipientId")
                         .OnDelete(DeleteBehavior.Cascade)

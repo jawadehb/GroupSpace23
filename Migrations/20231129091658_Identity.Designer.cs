@@ -90,7 +90,7 @@ namespace GroupSpace23.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("GroupSpace23.Models.Group", b =>
+            modelBuilder.Entity("GroupSpace23.Models.Evenement", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -114,10 +114,10 @@ namespace GroupSpace23.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Groups");
+                    b.ToTable("Evenements");
                 });
 
-            modelBuilder.Entity("GroupSpace23.Models.Message", b =>
+            modelBuilder.Entity("GroupSpace23.Models.Mand", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -146,7 +146,7 @@ namespace GroupSpace23.Migrations
 
                     b.HasIndex("RecipientId");
 
-                    b.ToTable("Message");
+                    b.ToTable("Mand");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -286,9 +286,9 @@ namespace GroupSpace23.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("GroupSpace23.Models.Message", b =>
+            modelBuilder.Entity("GroupSpace23.Models.Mand", b =>
                 {
-                    b.HasOne("GroupSpace23.Models.Group", "Recipient")
+                    b.HasOne("GroupSpace23.Models.Evenement", "Recipient")
                         .WithMany()
                         .HasForeignKey("RecipientId")
                         .OnDelete(DeleteBehavior.Cascade)

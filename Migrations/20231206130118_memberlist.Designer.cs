@@ -48,7 +48,7 @@ namespace GroupSpace23.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("GroupId")
+                    b.Property<int?>("EvenementId")
                         .HasColumnType("int");
 
                     b.Property<string>("LastName")
@@ -90,7 +90,7 @@ namespace GroupSpace23.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GroupId");
+                    b.HasIndex("EvenementId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -103,7 +103,7 @@ namespace GroupSpace23.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("GroupSpace23.Models.Group", b =>
+            modelBuilder.Entity("GroupSpace23.Models.Evenement", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -133,10 +133,10 @@ namespace GroupSpace23.Migrations
 
                     b.HasIndex("StartedById");
 
-                    b.ToTable("Groups");
+                    b.ToTable("Evenements");
                 });
 
-            modelBuilder.Entity("GroupSpace23.Models.Message", b =>
+            modelBuilder.Entity("GroupSpace23.Models.Mand", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -171,7 +171,7 @@ namespace GroupSpace23.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("Message");
+                    b.ToTable("Mand");
                 });
 
             modelBuilder.Entity("GroupSpace23.Models.Parameter", b =>
@@ -334,12 +334,12 @@ namespace GroupSpace23.Migrations
 
             modelBuilder.Entity("GroupSpace23.Areas.Identity.Data.GroupSpace23User", b =>
                 {
-                    b.HasOne("GroupSpace23.Models.Group", null)
+                    b.HasOne("GroupSpace23.Models.Evenement", null)
                         .WithMany("Leden")
-                        .HasForeignKey("GroupId");
+                        .HasForeignKey("EvenementId");
                 });
 
-            modelBuilder.Entity("GroupSpace23.Models.Group", b =>
+            modelBuilder.Entity("GroupSpace23.Models.Evenement", b =>
                 {
                     b.HasOne("GroupSpace23.Areas.Identity.Data.GroupSpace23User", "StartedBy")
                         .WithMany()
@@ -350,9 +350,9 @@ namespace GroupSpace23.Migrations
                     b.Navigation("StartedBy");
                 });
 
-            modelBuilder.Entity("GroupSpace23.Models.Message", b =>
+            modelBuilder.Entity("GroupSpace23.Models.Mand", b =>
                 {
-                    b.HasOne("GroupSpace23.Models.Group", "Recipient")
+                    b.HasOne("GroupSpace23.Models.Evenement", "Recipient")
                         .WithMany()
                         .HasForeignKey("RecipientId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -420,7 +420,7 @@ namespace GroupSpace23.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("GroupSpace23.Models.Group", b =>
+            modelBuilder.Entity("GroupSpace23.Models.Evenement", b =>
                 {
                     b.Navigation("Leden");
                 });

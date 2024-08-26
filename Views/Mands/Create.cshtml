@@ -1,0 +1,78 @@
+﻿@model GroupSpace23.Models.Mand
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer _localizer
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>@_localizer["Aanmaken"]</h1>
+
+<h4>@_localizer["Mand"]</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Sent" />
+            <input type="hidden" asp-for="Deleted" />
+            <input type="hidden" asp-for="SenderId" />
+            <input type="hidden" asp-for="SelectedItems" />
+
+            <div class="form-group">
+                <label asp-for="RecipientId" class="control-label">@_localizer["Wat is jouw event ?"]</label>
+
+                @if (User.IsInRole("SystemAdministrator"))
+                {
+                        <select asp-for="RecipientId" class="form-control" asp-items="ViewBag.RecipientId"></select>
+                }
+                else
+                {
+                        <select asp-for="RecipientId" class="form-control" asp-items="ViewBag.RecipientId"></select>
+                }
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Body" class="control-label">@_localizer["Wat heb je nodig ?"]</label>
+                <select asp-for="Body" class="form-control">
+                    <!-- Voeg hier de items toe waaruit de gebruiker kan kiezen -->
+                    <option value="Formule 1"> @_localizer["Formule 1: Klassieke Eleganti"]</option>
+                    <option value="Formule 2"> @_localizer["Formule 2: Rustieke Chique"]</option>
+                    <option value="Formule 3"> @_localizer["Formule 3: Moderne Glamour"]</option>
+                    <option value="Formule 4"> @_localizer["Formule 4: Printemps Pastel"]</option>
+                    <option value="Formule 5"> @_localizer["Formule 5: Thématique Vintage"]</option>
+                    <!-- Voeg meer items toe indien nodig -->
+                </select>
+                <span asp-validation-for="Body" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"> @_localizer["Extra Informatie"]</label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value=@_localizer["Maken"] class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">@_localizer["Terug naar overzicht"]</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI/t1fZl1Xk9qRC1/4fN5F5uYxu0lM2iBu7dD9h4=" crossorigin="anonymous"></script>
+        <script>
+            $(document).ready(function () {
+                $('form').submit(function () {
+                    $('#SelectedItems').val($('#Body').val());
+                });
+            });
+        </script>
+}
+
